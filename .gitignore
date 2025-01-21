@@ -3,3 +3,4 @@
 node_modules
 dist
 emotion_detection_cnn/venv
+emotion_detection_cnn/data
