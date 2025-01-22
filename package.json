@@ -109,7 +109,7 @@
   },
   "scripts": {
     "start": "npx tsc && node dist/app.js",
-    "dev": "nodemon src/app.ts",
+    "dev": "nodemon --legacy-watch --ignore 'emotion_detection_cnn/**/*' src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
