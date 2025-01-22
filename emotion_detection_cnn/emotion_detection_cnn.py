@@ -94,7 +94,7 @@ plt.xlabel('Epochs')
 plt.ylabel('Accuracy')
 plt.legend()
 
-# Display the plots
+# Save the plots
 plt.tight_layout()
 plt.savefig('training_history.png')
 
