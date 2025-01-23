@@ -68,15 +68,8 @@ emotion_model_info = emotion_model.fit(
         validation_data=validation_generator,
         validation_steps=7178 // batch_s)
 
-# json file is not needed since h5 file will be converted using tensorflowjs
-'''
-model_json = emotion_model.to_json()
-with open("emotion_model.json", "w") as json_file:
-    json_file.write(model_json)
-'''
-
-# save trained model weight in .h5 file
-emotion_model.save_weights('emotion_model.h5')
+# save trained model in h5 file
+emotion_model.save('emotion_detection_model.h5')
 
 # generate graph of loss and accuracy
 # Plot Loss

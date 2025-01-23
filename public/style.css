@@ -8,7 +8,6 @@ body {
     text-align: center;
     margin: 20px;
     margin-top: 0px;
-    font-size:35px;
 }
 
 /* links */
@@ -81,7 +80,6 @@ body {
 #emotion-title {
     text-align: center;
     font-weight: 550;
-    font-size:35px;
 }
 
 #canvas {
@@ -89,4 +87,20 @@ body {
     position:absolute;
     height: 500px;
     width: 500px;
+}
+
+#small-canvas-container {
+    z-index: 3;
+    position:absolute;
+    height: 500px;
+    width: 500px;
+}
+
+#small-canvas {
+    z-index: 3;
+    position:absolute;
+    top: 3px;
+    left: 449px;
+    height: 48px;
+    width: 48px;
 }

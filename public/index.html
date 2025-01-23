@@ -20,23 +20,26 @@
             </a>
         </div>
     </div>
-    <h2 id="title">&#128116;FACE TO EMOJI&#128512;</h2>
+    <h2 id="title">&#129489;FACE TO EMOJI&#128512;</h2>
       <div id="container"> <!-- Used the same layout as https://orbitalmaneuversimulator.com -->
         <div id="face-emoji-container">
             <video id="video-feed" autoplay></video>
             <canvas id="canvas" width="500" height="500"></canvas>
-            <div id="emoji-div">
+            <div id="small-canvas-container">
+              <canvas id="small-canvas"></canvas>
             </div>
-            <canvas id="small-canvas" width="48" height="48"></canvas>
+            <div id="emoji-div">
+              <h1 id="emotion-title"></h1>
+            </div>
+            
         </div>
       </div>
     <!-- bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-    <!-- face detection -->
+    <!-- tensorflowjs and mediapipe face detection imports -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection"></script>
 
     <script src="main.js" ></script>
