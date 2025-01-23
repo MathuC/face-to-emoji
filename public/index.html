@@ -10,7 +10,7 @@
   <body>
     <div id="links-container">
         <div id="gh-logo-container">
-            <a href="https://github.com/MathuC/orbital-maneuver-simulator">
+            <a href="https://github.com/MathuC/face-to-emoji">
                 <img id="gh-logo"src='img/ghLogo.png'>
             </a>
         </div>
@@ -24,12 +24,21 @@
       <div id="container"> <!-- Used the same layout as https://orbitalmaneuversimulator.com -->
         <div id="face-emoji-container">
             <video id="video-feed" autoplay></video>
+            <canvas id="canvas" width="500" height="500"></canvas>
             <div id="emoji-div">
-              <h3 id="emotion-title">Title</h3>
             </div>
+            <canvas id="small-canvas" width="48" height="48"></canvas>
         </div>
       </div>
+    <!-- bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <!-- face detection -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection"></script>
+
     <script src="main.js" ></script>
   </body>
 </html>

@@ -8,6 +8,7 @@ body {
     text-align: center;
     margin: 20px;
     margin-top: 0px;
+    font-size:35px;
 }
 
 /* links */
@@ -63,15 +64,16 @@ body {
 
 #video-feed {
     border: 3px solid black;
-    height: 400px;
-    width: 400px;
-    margin-right: -7px;
+    height: 500px;
+    width: 500px;
+    margin-right: -3px;
+    z-index: 1;
 }
 
 #emoji-div {
     border: 3px solid black;
-    height: 400px;
-    width: 300px;
+    height: 500px;
+    width: 400px;
     background-color: rgb(220, 220, 220);
     padding-left: 7px;
 }
@@ -79,4 +81,12 @@ body {
 #emotion-title {
     text-align: center;
     font-weight: 550;
+    font-size:35px;
+}
+
+#canvas {
+    z-index: 2;
+    position:absolute;
+    height: 500px;
+    width: 500px;
 }

@@ -11,11 +11,13 @@ import matplotlib.pyplot as plt
 train_data_gen = ImageDataGenerator(rescale=1./255)
 validation_data_gen = ImageDataGenerator(rescale=1./255)
 
+batch_s = 64
+
 # preprocess all train images
 validation_generator = validation_data_gen.flow_from_directory(
         'data/test',
         target_size=(48, 48),
-        batch_size=64,
+        batch_size=batch_s,
         color_mode="grayscale",
         class_mode='categorical')
 
@@ -23,7 +25,7 @@ validation_generator = validation_data_gen.flow_from_directory(
 train_generator = train_data_gen.flow_from_directory(
         'data/train',
         target_size=(48, 48),
-        batch_size=64,
+        batch_size=batch_s,
         color_mode="grayscale",
         class_mode='categorical')
 
@@ -50,26 +52,28 @@ cv2.ocl.setUseOpenCL(False)
 
 # Define the schedule
 lr_schedule = ExponentialDecay(
-    initial_learning_rate=0.001,  # Starting learning rate
-    decay_steps=1000,            # How often to apply decay (in steps)
-    decay_rate=0.96,             # The factor by which the learning rate decays
-    staircase=True               # If True, decay in discrete intervals
+    initial_learning_rate=0.001, # Starting learning rate
+    decay_steps=28709 // batch_s, # How often to apply decay (in steps)
+    decay_rate=0.90, # The factor by which the learning rate decays
+    staircase=False # If True, decay in discrete intervals
 )
 
-emotion_model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=lr_schedule), metrics=['accuracy'])
+emotion_model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=lr_schedule),  metrics=['accuracy'])
 
 # train cnn
 emotion_model_info = emotion_model.fit(
         train_generator,
-        steps_per_epoch=28709 // 64,
-        epochs=50,
+        steps_per_epoch=28709 // batch_s,
+        epochs=15, 
         validation_data=validation_generator,
-        validation_steps=7178 // 64)
+        validation_steps=7178 // batch_s)
 
-# save model structure in jason file
+# json file is not needed since h5 file will be converted using tensorflowjs
+'''
 model_json = emotion_model.to_json()
 with open("emotion_model.json", "w") as json_file:
     json_file.write(model_json)
+'''
 
 # save trained model weight in .h5 file
 emotion_model.save_weights('emotion_model.h5')
@@ -94,7 +98,6 @@ plt.xlabel('Epochs')
 plt.ylabel('Accuracy')
 plt.legend()
 
-# Save the plots
+# Display the plots
 plt.tight_layout()
 plt.savefig('training_history.png')
-
