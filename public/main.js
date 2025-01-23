@@ -1,5 +1,6 @@
 const emotions = ["Angry", "Disgust", "Fear", "Happy", "Neutral", "Sad", "Surprise"];
 const emojis = ["&#128545;", "&#129314;", "&#128560;", "&#128516;", "&#128528;", "&#128546;", "&#128561;"];
+const emotions_with_emojis = emotions.map((emotion, id) => (emotion + " " + emojis[id]));
 
 const run = async() => {
     const emotionDetectionModel = await tf.loadLayersModel('emotion_detection_model/model.json');
@@ -60,6 +61,48 @@ const run = async() => {
         // prepare image 
         hiddenCanvas.width = videoFeed.videoWidth;
         hiddenCanvas.height = videoFeed.videoHeight;
+
+        // bar chart
+        let emotionProbs = [0, 0, 0, 0, 0, 0, 0];
+        let emotionPercs = emotionProbs;
+        let maxEmotionId = 0;
+
+        // Function to find the max index and set colors
+        function getColors(maxId) {
+            return Array.from({ length: 7 }, (_, index) => index === maxId ? "#2dbd54" : "#5979c9");
+        }
+
+        function probsToPercs(probs) {
+            probs = Array.from(probs); // probs is in Float32Array format not an array of Number
+            return probs.map((prob) => (Math.round(prob*10000)/100));
+        }
+
+        const chartData = [{
+            x: emotions_with_emojis,
+            y: emotionPercs,
+            type: 'bar'
+        }];
+        
+        const chartLayout = {
+            title: 'Emotion Probability Distribution Output from CNN',
+            xaxis: {
+                title: 'Emotions',
+                tickmode: 'array',
+                tickvals: emotions_with_emojis,
+                ticktext: emotions_with_emojis,
+                showgrid: false
+            },
+            yaxis: {
+                title: 'Probability (%)',
+                range: [0, 100],
+                showgrid: true
+            },
+            barmode: 'group',
+            showlegend: false
+        };
+
+        // Render the chart initially
+        Plotly.newPlot('bar-chart', chartData, chartLayout);
         
         const loop = async () => {
             // detect face
@@ -102,12 +145,27 @@ const run = async() => {
                 imgTensor = imgTensor.toFloat().div(tf.scalar(255)); // changing greyscale 0-255 value to 0.0-1.0
                 imgTensor = imgTensor.expandDims(0); //adding batchsize at the beginning so input is exactly like inputs the model trained with
                 
-                let emotionProbList = emotionDetectionModel.predict(imgTensor).dataSync();
-                let emotionId = emotionProbList.indexOf(Math.max(...emotionProbList));
-                document.getElementById("emotion-title").innerHTML = emotions[emotionId] + " " +
-                    Math.round(emotionProbList[emotionId] * 100) + "%";
-                document.getElementById("main-emoji").innerHTML = emojis[emotionId];
+                emotionProbs = emotionDetectionModel.predict(imgTensor).dataSync();
+                emotionPercs = probsToPercs(emotionProbs);
+                maxEmotionId = emotionProbs.indexOf(Math.max(...emotionProbs));
 
+                document.getElementById("emotion-title").innerHTML = emotions[maxEmotionId] + " " +
+                    Math.round(emotionProbs[maxEmotionId] * 100) + "%";
+                document.getElementById("main-emoji").innerHTML = emojis[maxEmotionId];
+
+                // update bar chart
+                // Update the chart with new data using Plotly.react
+                Plotly.react('bar-chart', [{
+                    x: emotions_with_emojis,
+                    y: emotionPercs,
+                    type: 'bar',
+                    text: emotionPercs.map((perc) => perc.toFixed(2)),
+                    textposition: 'inside',
+                    hoverinfo: 'x+y',
+                    marker: {
+                        color: getColors(maxEmotionId),
+                    }
+                }], chartLayout);
             }
         };
 
