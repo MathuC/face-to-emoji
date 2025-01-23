@@ -80,6 +80,13 @@ body {
 #emotion-title {
     text-align: center;
     font-weight: 550;
+    font-size: 40px;
+}
+
+#main-emoji {
+    text-align: center;
+    font-size: 100px;
+    margin-top: -10px;
 }
 
 #canvas {
@@ -100,7 +107,9 @@ body {
     z-index: 3;
     position:absolute;
     top: 3px;
-    left: 449px;
+    left: 3px;
     height: 48px;
     width: 48px;
+    border: 1px solid black;
+    filter: grayscale(100%);
 }

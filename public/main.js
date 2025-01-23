@@ -1,4 +1,5 @@
 const emotions = ["Angry", "Disgust", "Fear", "Happy", "Neutral", "Sad", "Surprise"];
+const emojis = ["&#128545;", "&#129314;", "&#128560;", "&#128516;", "&#128528;", "&#128546;", "&#128561;"];
 
 const run = async() => {
     const emotionDetectionModel = await tf.loadLayersModel('emotion_detection_model/model.json');
@@ -16,8 +17,8 @@ const run = async() => {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
-    const hiddenCanvas = document.createElement("canvas");
-    const hiddenCtx = hiddenCanvas.getContext("2d");
+    const hiddenCanvas = document.createElement("canvas"); 
+    const hiddenCtx = hiddenCanvas.getContext("2d", { willReadFrequently: true });
 
     const croppedCanvas = document.createElement("canvas");
     const croppedCtx = croppedCanvas.getContext("2d");
@@ -36,7 +37,7 @@ const run = async() => {
         let videoScale;
         let videoOffsetX
         let videoOffsetY;
-        // set offsets and scaling
+        // set offsets and scaling because of videoFeed.style.objectFit = "cover"; 
         if (videoWidth > videoHeight) {
             videoScale = 500/videoHeight;
             videoOffsetY = 0;
@@ -104,7 +105,8 @@ const run = async() => {
                 let emotionProbList = emotionDetectionModel.predict(imgTensor).dataSync();
                 let emotionId = emotionProbList.indexOf(Math.max(...emotionProbList));
                 document.getElementById("emotion-title").innerHTML = emotions[emotionId] + " " +
-                    Math.round(emotionProbList[emotionId]*10000)/100 + "%";
+                    Math.round(emotionProbList[emotionId] * 100) + "%";
+                document.getElementById("main-emoji").innerHTML = emojis[emotionId];
 
             }
         };
