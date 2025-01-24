@@ -1,8 +1,52 @@
 const emotions = ["Angry", "Disgust", "Fear", "Happy", "Neutral", "Sad", "Surprise"];
 const emojis = ["&#128545;", "&#129314;", "&#128560;", "&#128516;", "&#128528;", "&#128546;", "&#128561;"];
 const emotions_with_emojis = emotions.map((emotion, id) => (emotion + " " + emojis[id]));
+const moreEmojis = [["&#128545;", "&#128544;", "&#129324;", "&#128127;", "&#128548;", "&#128580;", "&#128530;", "&#128574;"],
+    ["&#129314;", "&#129326;", "&#128534;", "&#128547;","&#128555;", "&#128567;", "&#128565;", "&#128128;"], 
+    ["&#128560;", "&#128552;", "&#128549;"], 
+    ["&#128516;"],
+    ["&#128528;", "&#128529;", "&#128566;"],
+    ["&#128546;"],
+    ["&#128561;", "&#128562;", "&#128558;", "&#128559;"]
+];
+let currentEmotionId = null;
+
+// socket.io socket
+const socket = io();
+
+function updateEmojis(id) {
+    let innerHTML = "";
+    for (let emoji of moreEmojis[id]) {
+        innerHTML += `<div class='clickable-emoji' onclick='onEmojiClick("${emoji}");'>${emoji}</div>`;
+    }
+    document.getElementById("emoji-list").innerHTML = innerHTML;
+}
+
+const emojiCopyCount = document.getElementById("emoji-copy-count");
+
+// get emoji copy count
+fetch('/api/emojiCopyCount')
+    .then(response => response.json())
+    .then(data => {
+        emojiCopyCount.innerHTML = data.emojiCopyCount;
+    })
+    .catch(error => {
+        console.error('Error fetching emoji copy count:', error);
+        emojiCopyCount.innerHTML = 'undefined';
+    });
+
+function onEmojiClick(emoji) {
+    navigator.clipboard.writeText(emoji); // copied to clipboard
+    emojiCopyCount.innerHTML = parseInt(emojiCopyCount.innerHTML) + 1;
+    socket.emit('incrementCopyCount'); 
+}
+    
+socket.on('emojiCountUpdated', async (updatedCopyCount) => {
+    document.getElementById("emoji-copy-count").innerHTML = updatedCopyCount ? updatedCopyCount : 'undefined';
+});
 
 const run = async() => {
+    // loading the trained convolutional neural network model
     const emotionDetectionModel = await tf.loadLayersModel('emotion_detection_model/model.json');
 
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -33,6 +77,17 @@ const run = async() => {
 
     // wait till video loads up
     videoFeed.addEventListener("loadeddata", async ()=> {
+
+        document.getElementById('play-pause-btn').addEventListener('click', () => {
+            if (videoFeed.paused == false){
+                videoFeed.pause();
+                document.getElementById('play-pause-btn').innerHTML = '&#9654;';
+            } else {
+                videoFeed.play();
+                document.getElementById('play-pause-btn').innerHTML = '&#10074;&#10074;';
+            }
+        });
+
         let videoWidth = videoFeed.videoWidth;
         let videoHeight = videoFeed.videoHeight;
         let videoScale;
@@ -49,7 +104,7 @@ const run = async() => {
             videoOffsetY = ((videoScale * videoHeight) - 500)/2
         }
 
-        // detect face
+        // detect face using a publicly available AI model published by Mediapipe
         const faceDetectorModel = faceDetection.SupportedModels.MediaPipeFaceDetector;
         const faceDetectorConfig = {
         runtime: 'mediapipe',
@@ -67,7 +122,6 @@ const run = async() => {
         let emotionPercs = emotionProbs;
         let maxEmotionId = 0;
 
-        // Function to find the max index and set colors
         function getColors(maxId) {
             return Array.from({ length: 7 }, (_, index) => index === maxId ? "#2dbd54" : "#5979c9");
         }
@@ -105,67 +159,75 @@ const run = async() => {
         Plotly.newPlot('bar-chart', chartData, chartLayout);
         
         const loop = async () => {
-            // detect face
-            const faces = await faceDetector.estimateFaces(videoFeed, estimationConfig);
-            ctx.clearRect(0, 0, 500, 500);
-            if (faces.length > 0) {
-                // clear canvas
-                clearCanvas(hiddenCanvas, hiddenCtx);
-                clearCanvas(croppedCanvas, croppedCtx);
-                clearCanvas(resizedCanvas, resizedCtx);
+            if (videoFeed.paused == false) {
+                // detect face
+                const faces = await faceDetector.estimateFaces(videoFeed, estimationConfig);
+                ctx.clearRect(0, 0, 500, 500);
+                if (faces.length > 0) {
+                    // clear canvas
+                    clearCanvas(hiddenCanvas, hiddenCtx);
+                    clearCanvas(croppedCanvas, croppedCtx);
+                    clearCanvas(resizedCanvas, resizedCtx);
 
-                let box = faces[0].box;
-                ctx.strokeStyle = "blue";
-                ctx.lineWidth = 3;
-                ctx.strokeRect(box.xMin * videoScale - videoOffsetX, 
-                    box.yMin * videoScale - videoOffsetY, box.width * videoScale, box.height * videoScale);
+                    let box = faces[0].box;
+                    ctx.strokeStyle = "blue";
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(box.xMin * videoScale - videoOffsetX, 
+                        box.yMin * videoScale - videoOffsetY, box.width * videoScale, box.height * videoScale);
+                        
+                    // prepare image
+                    hiddenCtx.drawImage(videoFeed, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
                     
-                // prepare image
-                hiddenCtx.drawImage(videoFeed, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
-                
-                let imageData = hiddenCtx.getImageData(videoFeed.videoWidth - box.xMin - box.width, box.yMin, box.width, box.height);
-                croppedCanvas.width = box.width;
-                croppedCanvas.height = box.height;
-                croppedCtx.putImageData(imageData, 0, 0);
-                
-                resizedCtx.fillStyle = 'grey'; 
-                resizedCtx.fillRect(0, 0, 48, 48);
-                resizedCtx.drawImage(croppedCanvas, 0, 0, 48, 48);
+                    let imageData = hiddenCtx.getImageData(videoFeed.videoWidth - box.xMin - box.width, box.yMin, box.width, box.height);
+                    croppedCanvas.width = box.width;
+                    croppedCanvas.height = box.height;
+                    croppedCtx.putImageData(imageData, 0, 0);
+                    
+                    resizedCtx.fillStyle = 'grey'; 
+                    resizedCtx.fillRect(0, 0, 48, 48);
+                    resizedCtx.drawImage(croppedCanvas, 0, 0, 48, 48);
 
-                // feed prepared image into emotion detection model
-                let imgTensor = tf.browser.fromPixels(resizedCanvas);
+                    // feed prepared image into emotion detection model
+                    let imgTensor = tf.browser.fromPixels(resizedCanvas);
 
-                // Separate the RGB channels
-                let r = imgTensor.slice([0, 0, 0], [-1, -1, 1]);
-                let g = imgTensor.slice([0, 0, 1], [-1, -1, 1]);
-                let b = imgTensor.slice([0, 0, 2], [-1, -1, 1]);
+                    // Separate the RGB channels
+                    let r = imgTensor.slice([0, 0, 0], [-1, -1, 1]);
+                    let g = imgTensor.slice([0, 0, 1], [-1, -1, 1]);
+                    let b = imgTensor.slice([0, 0, 2], [-1, -1, 1]);
 
-                // Compute the grayscale using the luminance formula: 0.299*R + 0.587*G + 0.114*B
-                imgTensor = r.mul(0.299).add(g.mul(0.587)).add(b.mul(0.114));
-                imgTensor = imgTensor.toFloat().div(tf.scalar(255)); // changing greyscale 0-255 value to 0.0-1.0
-                imgTensor = imgTensor.expandDims(0); //adding batchsize at the beginning so input is exactly like inputs the model trained with
-                
-                emotionProbs = emotionDetectionModel.predict(imgTensor).dataSync();
-                emotionPercs = probsToPercs(emotionProbs);
-                maxEmotionId = emotionProbs.indexOf(Math.max(...emotionProbs));
-
-                document.getElementById("emotion-title").innerHTML = emotions[maxEmotionId] + " " +
-                    Math.round(emotionProbs[maxEmotionId] * 100) + "%";
-                document.getElementById("main-emoji").innerHTML = emojis[maxEmotionId];
-
-                // update bar chart
-                // Update the chart with new data using Plotly.react
-                Plotly.react('bar-chart', [{
-                    x: emotions_with_emojis,
-                    y: emotionPercs,
-                    type: 'bar',
-                    text: emotionPercs.map((perc) => perc.toFixed(2)),
-                    textposition: 'inside',
-                    hoverinfo: 'x+y',
-                    marker: {
-                        color: getColors(maxEmotionId),
+                    // Compute the grayscale using the luminance formula: 0.299*R + 0.587*G + 0.114*B
+                    imgTensor = r.mul(0.299).add(g.mul(0.587)).add(b.mul(0.114));
+                    imgTensor = imgTensor.toFloat().div(tf.scalar(255)); // changing greyscale 0-255 value to 0.0-1.0
+                    imgTensor = imgTensor.expandDims(0); //adding batchsize at the beginning so input is exactly like inputs the model trained with
+                    
+                    emotionProbs = emotionDetectionModel.predict(imgTensor).dataSync();
+                    emotionPercs = probsToPercs(emotionProbs);
+                    maxEmotionId = emotionProbs.indexOf(Math.max(...emotionProbs));
+                    document.getElementById("emotion-title").innerHTML = emotions[maxEmotionId] + " " +
+                        Math.round(emotionProbs[maxEmotionId] * 100) + "%";
+                    
+                    // can't constantly update these if no change, this interferes with client clicks
+                    if (maxEmotionId != currentEmotionId) {
+                        currentEmotionId = maxEmotionId;
+                        document.getElementById("emoji-title").innerHTML = emojis[maxEmotionId];
+                        updateEmojis(maxEmotionId);
                     }
-                }], chartLayout);
+                    
+
+                    // update bar chart
+                    // Update the chart with new data using Plotly.react
+                    Plotly.react('bar-chart', [{
+                        x: emotions_with_emojis,
+                        y: emotionPercs,
+                        type: 'bar',
+                        text: emotionPercs.map((perc) => perc.toFixed(2)),
+                        textposition: 'inside',
+                        hoverinfo: 'x+y',
+                        marker: {
+                            color: getColors(maxEmotionId),
+                        }
+                    }], chartLayout);
+                }
             }
         };
 

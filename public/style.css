@@ -48,6 +48,22 @@ body {
 	border: 1px solid rgb(225, 225, 225);
 }
 
+#emoji-copy {
+    float: left;
+    padding-top: 7px;
+    padding-left: 15px;
+    font-weight: bold;
+}
+
+#emoji-copy-count {
+    font-size: 18px;
+}
+
+#emoji-copy-text {
+    font-size: 14px;
+    padding-left: 8px;
+}
+
 /* main */
 
 #container {
@@ -59,6 +75,15 @@ body {
 #face-emoji-container {
     display: flex;
     align-items: center;
+    position: relative;
+}
+
+#help-text{
+    position: absolute; 
+    bottom: 0;
+    margin-bottom: 3px;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 #video-feed {
@@ -80,13 +105,34 @@ body {
 #emotion-title {
     text-align: center;
     font-weight: 550;
-    font-size: 40px;
+    font-size: 50px;
 }
 
-#main-emoji {
+#emoji-title {
     text-align: center;
     font-size: 150px;
-    margin-top: -10px;
+    margin: -8px;
+    margin-top: 20px;
+}
+
+#emoji-list {
+    word-wrap: break-word;
+}
+
+.clickable-emoji {
+    cursor: pointer;
+    font-size: 50px;
+    display: inline;
+    margin: 7px;
+    padding-top: 7px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 5px;
+    border: 1px solid rgb(110, 110, 110);
+    background-color: rgb(192, 192, 192);
+}
+.clickable-emoji:hover {
+    background-color: rgb(172, 172, 172);
 }
 
 #canvas {
@@ -106,12 +152,27 @@ body {
 #small-canvas {
     z-index: 3;
     position:absolute;
-    top: 3px;
-    left: 3px;
+    top: 2px;
+    left: 2px;
     height: 48px;
     width: 48px;
     border: 1px solid black;
     filter: grayscale(100%);
+}
+
+#play-pause-btn {
+    z-index: 3;
+    position:absolute;
+    top: 2px;
+    left: 450px;
+    height: 48px;
+    width: 48px;
+    font-size: 18px;
+    font-family: Arial;
+}
+
+#play-pause-btn:hover {
+    background-color: rgb(179, 179, 179);
 }
 
 #bar-chart-container {

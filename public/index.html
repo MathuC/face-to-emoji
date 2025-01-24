@@ -19,6 +19,7 @@
                 <span>mathusan.net</span>
             </a>
         </div>
+        <div id="emoji-copy"><span id="emoji-copy-count"></span><span id="emoji-copy-text">Emojis Copied!</span></div>
     </div>
     <h2 id="title">&#129489;FACE TO EMOJI&#128512;</h2>
       <div id="container"> <!-- Used the same layout as https://orbitalmaneuversimulator.com -->
@@ -27,10 +28,13 @@
             <canvas id="canvas" width="500" height="500"></canvas>
             <div id="small-canvas-container">
               <canvas id="small-canvas"></canvas>
+              <button id="play-pause-btn">&#10074;&#10074;</button>
             </div>
             <div id="emoji-div">
               <h1 id="emotion-title"></h1>
-              <h1 id="main-emoji"></h1>
+              <h1 id="emoji-title"></h1>
+              <div id="emoji-list"></div>
+              <p id="help-text">*Click an emoji to copy it to your clipboard!</p>
             </div>
         </div>
       </div>
@@ -47,6 +51,9 @@
 
     <!-- poltly import for probability percentages bar chart -->
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+
+    <!-- socket.io import for emoji copy count -->
+    <script src="/socket.io/socket.io.js"></script>
 
     <script src="main.js" ></script>
   </body>
