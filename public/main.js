@@ -15,14 +15,6 @@ let currentEmotionId = null;
 // socket.io socket
 const socket = io();
 
-function updateEmojis(id) {
-    let innerHTML = "";
-    for (let emoji of moreEmojis[id]) {
-        innerHTML += `<div class='clickable-emoji' onclick='onEmojiClick(event,"${emoji}");'>${emoji}</div>`;
-    }
-    document.getElementById("emoji-list").innerHTML = innerHTML;
-}
-
 const emojiCopyCount = document.getElementById("emoji-copy-count");
 
 // get emoji copy count
@@ -238,6 +230,14 @@ function clearCanvas(canvas, ctx) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+function updateEmojis(id) {
+    let innerHTML = "";
+    for (let emoji of moreEmojis[id]) {
+        innerHTML += `<div class='clickable-emoji' onclick='onEmojiClick(event,"${emoji}");'>${emoji}</div>`;
+    }
+    document.getElementById("emoji-list").innerHTML = innerHTML;
+}
+
 function onEmojiClick(event, emoji) {
     navigator.clipboard.writeText(emoji); // copied to clipboard
     emojiCopyCount.innerHTML = parseInt(emojiCopyCount.innerHTML) + 1;
@@ -247,12 +247,10 @@ function onEmojiClick(event, emoji) {
     let alert = document.getElementById("copy-alert");
     alert.style.display = "inline";
     alert.style.left = `${event.pageX - 90}px`; // Set alert position based on cursor
-    alert.style.top = `${event.pageY + 20}px`; // Position slightly below the cursor
+    alert.style.top = `${event.pageY + 20}px`;
 
     // Fade out the alert
     alert.style.opacity = 1;
-
-    // After 1 second, fade out the alert
     setTimeout(function() {
         alert.style.opacity = 0;
     }, 500);
