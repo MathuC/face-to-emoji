@@ -135,6 +135,19 @@ body {
     background-color: rgb(172, 172, 172);
 }
 
+#copy-alert {
+    z-index: 2;
+    position: fixed;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    border-radius: 5px;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-out;
+}
+
 #canvas {
     z-index: 2;
     position:absolute;

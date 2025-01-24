@@ -17,7 +17,7 @@ const socket = io();
 function updateEmojis(id) {
     let innerHTML = "";
     for (let emoji of moreEmojis[id]) {
-        innerHTML += `<div class='clickable-emoji' onclick='onEmojiClick("${emoji}");'>${emoji}</div>`;
+        innerHTML += `<div class='clickable-emoji' onclick='onEmojiClick(event,"${emoji}");'>${emoji}</div>`;
     }
     document.getElementById("emoji-list").innerHTML = innerHTML;
 }
@@ -35,10 +35,24 @@ fetch('/api/emojiCopyCount')
         emojiCopyCount.innerHTML = 'undefined';
     });
 
-function onEmojiClick(emoji) {
+function onEmojiClick(event, emoji) {
     navigator.clipboard.writeText(emoji); // copied to clipboard
     emojiCopyCount.innerHTML = parseInt(emojiCopyCount.innerHTML) + 1;
     socket.emit('incrementCopyCount'); 
+    
+    // Show the alert
+    let alert = document.getElementById("copy-alert");
+    alert.style.display = "inline";
+    alert.style.left = `${event.pageX - 90}px`; // Set alert position based on cursor
+    alert.style.top = `${event.pageY + 20}px`; // Position slightly below the cursor
+
+    // Fade out the alert
+    alert.style.opacity = 1;
+
+    // After 1 second, fade out the alert
+    setTimeout(function() {
+        alert.style.opacity = 0;
+    }, 300);
 }
     
 socket.on('emojiCountUpdated', async (updatedCopyCount) => {
