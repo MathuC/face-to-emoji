@@ -9,6 +9,7 @@ const moreEmojis = [["&#128545;", "&#128544;", "&#129324;", "&#128127;", "&#1285
     ["&#128546;"],
     ["&#128561;", "&#128562;", "&#128558;", "&#128559;"]
 ];
+
 let currentEmotionId = null;
 
 // socket.io socket
@@ -35,32 +36,12 @@ fetch('/api/emojiCopyCount')
         emojiCopyCount.innerHTML = 'undefined';
     });
 
-function onEmojiClick(event, emoji) {
-    navigator.clipboard.writeText(emoji); // copied to clipboard
-    emojiCopyCount.innerHTML = parseInt(emojiCopyCount.innerHTML) + 1;
-    socket.emit('incrementCopyCount'); 
-    
-    // Show the alert
-    let alert = document.getElementById("copy-alert");
-    alert.style.display = "inline";
-    alert.style.left = `${event.pageX - 90}px`; // Set alert position based on cursor
-    alert.style.top = `${event.pageY + 20}px`; // Position slightly below the cursor
-
-    // Fade out the alert
-    alert.style.opacity = 1;
-
-    // After 1 second, fade out the alert
-    setTimeout(function() {
-        alert.style.opacity = 0;
-    }, 500);
-}
-    
 socket.on('emojiCountUpdated', async (updatedCopyCount) => {
     document.getElementById("emoji-copy-count").innerHTML = updatedCopyCount ? updatedCopyCount : 'undefined';
 });
 
 const run = async() => {
-    // loading the trained convolutional neural network model
+    // loading the trained convolutional neural network model that detects emotions
     const emotionDetectionModel = await tf.loadLayersModel('emotion_detection_model/model.json');
 
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -82,14 +63,13 @@ const run = async() => {
     const croppedCanvas = document.createElement("canvas");
     const croppedCtx = croppedCanvas.getContext("2d");
 
-    //const resizedCanvas = document.createElement("canvas");
     const resizedCanvas = document.getElementById("small-canvas");
     const resizedCtx = resizedCanvas.getContext("2d");
     // input format of tensor in emotion_detection_model was [batch_size, 48, 48, 1] when training
     resizedCanvas.width = 48;
     resizedCanvas.height = 48;
 
-    // wait till video loads up
+    // wait till video feed loads up
     videoFeed.addEventListener("loadeddata", async ()=> {
 
         document.getElementById('play-pause-btn').addEventListener('click', () => {
@@ -220,7 +200,7 @@ const run = async() => {
                     document.getElementById("emotion-title").innerHTML = emotions[maxEmotionId] + " " +
                         Math.round(emotionProbs[maxEmotionId] * 100) + "%";
                     
-                    // can't constantly update these if no change, this interferes with client clicks
+                    // only update these when needed, if not, updates interferes with client's clicks
                     if (maxEmotionId != currentEmotionId) {
                         currentEmotionId = maxEmotionId;
                         document.getElementById("emoji-title").innerHTML = emojis[maxEmotionId];
@@ -256,4 +236,24 @@ run().catch((error) => {
 
 function clearCanvas(canvas, ctx) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function onEmojiClick(event, emoji) {
+    navigator.clipboard.writeText(emoji); // copied to clipboard
+    emojiCopyCount.innerHTML = parseInt(emojiCopyCount.innerHTML) + 1;
+    socket.emit('incrementCopyCount'); 
+    
+    // Show the alert
+    let alert = document.getElementById("copy-alert");
+    alert.style.display = "inline";
+    alert.style.left = `${event.pageX - 90}px`; // Set alert position based on cursor
+    alert.style.top = `${event.pageY + 20}px`; // Position slightly below the cursor
+
+    // Fade out the alert
+    alert.style.opacity = 1;
+
+    // After 1 second, fade out the alert
+    setTimeout(function() {
+        alert.style.opacity = 0;
+    }, 500);
 }
