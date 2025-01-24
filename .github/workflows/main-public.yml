@@ -8,10 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    concurrency:
-      group: prod_deploy
-      cancel-in-progress: true
-
+    
     steps:
       - name: install ssh keys
         run: |
