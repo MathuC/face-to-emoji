@@ -69,6 +69,6 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(port, () => {
+server.listen(port, 'localhost', () => { // listens by default on 0.0.0.0 which is bad practice, so specified localhost
     console.log(`Server running on http://localhost:${port}`);
 });

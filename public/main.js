@@ -52,7 +52,7 @@ function onEmojiClick(event, emoji) {
     // After 1 second, fade out the alert
     setTimeout(function() {
         alert.style.opacity = 0;
-    }, 300);
+    }, 500);
 }
     
 socket.on('emojiCountUpdated', async (updatedCopyCount) => {
