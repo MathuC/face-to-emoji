@@ -6,7 +6,7 @@ find the perfect emoji for you.
 This web app does real-time facial emotion recognition using a convolutional neural network and maps the output to the corresponding emojis. All of the image processing is done directly in your browser and in real-time, eliminating any privacy concerns.
 
 ## Demo
-https://github.com/user-attachments/assets/82a504af-b450-4ee6-8d2a-4c0ee611ccc2
+https://github.com/user-attachments/assets/81090d92-beca-4377-a38e-7568299dcb97
 
 # Project Architecture
 
@@ -25,10 +25,13 @@ https://github.com/user-attachments/assets/82a504af-b450-4ee6-8d2a-4c0ee611ccc2
 # Setup
 
 ## Development Server
-**Prerequisites:** Python 3, Node.js, npm
+**Prerequisites:** Node.js, npm, MongoDB
 
 ## Production Server
-**Prerequisites:** MongoDB, Node.js, npm
+**Prerequisites:** Node.js, npm, MongoDB
+
+## Convolutional Neural Network
+**Prerequisites:** Python 3
 
 # Contributing
 - To inform us about bugs or about enhancements you think the web app can benefit from, [submit a new issue](https://github.com/MathuC/face-to-emoji/issues/new) in the repository.
