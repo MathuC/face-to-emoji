@@ -34,7 +34,7 @@ https://github.com/user-attachments/assets/81090d92-beca-4377-a38e-7568299dcb97
 ### Structure
 #### Layers
 - **Input** - Shape: (48, 48, 1): The model expects grayscale images with dimensions 48x48 pixels.
-- **Convolutional layers**: These layers are the core building blocks of the CNN. They detect edges and corners and when they are deeper in the CNN, they learn more complex patterns like textures, shapes, and patterns.
+- **Convolutional layers**: These layers are the core building blocks of the CNN. They detect edges and corners and when they are deeper in the CNN, they learn more complex patterns like shapes and textures.
 - **Pooling layers**: Each pooling layer reduces the spatial dimensions by taking the maximum value over a 2x2 window, reducing computational complexity while retaining important features.
 - **Dropout layers**: These layers randomly set a percentage of the neurons to zero during training, which helps prevent overfitting.
 - **Flatten layer**: This layer is just used to prepare the data for the fully connected (dense) layers by converting the multi-dimensional tensor into a 1D vector.
