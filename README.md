@@ -55,25 +55,100 @@ I initially trained the model for 30 epochs but that caused overfitting: even if
 ### Limitations
 The model's accuracy is not that high at around 63%. 
 
-This is mainly because the dataset is not big enough and because it is very imbalanced. The happy category has more than 7000 images, while the disgust category has under 500 images! Maybe if all of the categories had more than 7000 images, the accuracy would be a lot higher, since for happiness, the model performs incredibly well.
+This is mainly because the dataset is not big enough and because it is very imbalanced. The *happy* category has more than 7000 images, while the *disgust* category has under 500 images! Maybe if all of the categories had more than 7000 images, the accuracy would be a lot higher, since for happiness, the model performs incredibly well.
 
 <img src="https://github.com/user-attachments/assets/4056100d-285c-4826-b0b1-0a148ceea31f" width="800">
 
-The model also often gets confused between emotions that look similar on a face, especially for the categories with the lower amount of images in the dataset. It often gets confused between disgust and anger. It also gets confused between surprise and fear, which is more understandable since those two emotions often overlap.
+The model often predicts happiness correctly with a 99% to 100% confidence score. But it often gets confused between emotions that look similar on a face, especially for the categories with the lower amount of images in the dataset. It often gets confused between disgust and anger. It also gets confused between surprise and fear, which is more understandable since those two emotions often overlap.
 
-<img src="https://github.com/user-attachments/assets/c9ad7091-5733-4e21-acb0-5da1fa44cb2e" width="500">
-<img src="https://github.com/user-attachments/assets/b112358d-6795-4ec7-9126-6c00cc8d6e0b" width="500">
+*Correct prediction for happiness* <br>
+<img src="https://github.com/user-attachments/assets/d8f35e91-04bc-4a24-a8a4-9d968c9ab757" width="400">
+
+*Wrong prediction for disgust* <br>
+<img src="https://github.com/user-attachments/assets/c9ad7091-5733-4e21-acb0-5da1fa44cb2e" width="400">
+
+*Wrong prediction for fear* <br>
+<img src="https://github.com/user-attachments/assets/b112358d-6795-4ec7-9126-6c00cc8d6e0b" width="400">
 
 # Setup
-
-## Development Server
 **Prerequisites:** Node.js, npm, MongoDB
 
-## Production Server
-**Prerequisites:** Node.js, npm, MongoDB
+1. Clone the repository:
+```bash
+git clone https://github.com/MathuC/face-to-emoji.git
+```
+
+2. Start the MongoDB server and access the MongoDB shell.
+
+3. Switch to the Database:
+```mongo
+use emojiAppDB
+```
+4. Insert the correct Document into the Collection `appStats`:
+```mongo
+db.appstats.insertOne({
+  key: 'emojiCopyCount',
+  value: 0
+});
+```
+5. Install dependencies: 
+```bash
+npm install
+```
+
+### Development Server
+6. Start the development server:
+```bash
+npm run dev
+```
+
+### Production Server
+6. Start the production server:
+```bash
+npm start
+```
 
 ## Convolutional Neural Network
+*If you want to tweak the CNN's structure or train the model with a different dataset*
+
 **Prerequisites:** Python 3
+1. Navigate to the correct directory:
+```bash
+cd emotion_detection_cnn
+```
+2. Create virtual environment:
+```bash
+python -m venv venv
+```
+3. Activate virtual environment:
+ - macOS/Linux:
+```bash
+source venv/bin/activate
+```
+ - Windows:
+```batch
+venv\Scripts\activate
+```
+4. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+5. Train the model:
+```bash
+python emotion_detection_cnn.py
+```
+6. Convert the Keras model into a TensoFlow.js model:
+```bash
+tensorflowjs_converter --input_format=keras emotion_detection_model.h5 emotion_detection_model
+```
+7. Delete the old model:
+```bash
+rm -r ../public/emotion_detection_model/
+```
+8. Move your new model to the correct directory:
+```bash
+mv emotion_detection_model/ ../public/
+```
 
 # Contributing
 - To inform us about bugs or about enhancements you think the web app can benefit from, [submit a new issue](https://github.com/MathuC/face-to-emoji/issues/new) in the repository.
