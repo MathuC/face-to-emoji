@@ -32,13 +32,13 @@ https://github.com/user-attachments/assets/81090d92-beca-4377-a38e-7568299dcb97
 #### Layers
 - **Input** - Shape: (48, 48, 1): The model expects grayscale images with dimensions 48x48 pixels.
 - **Convolutional layers**: These layers are the core building blocks of the CNN. They detect edges and corners and when they are deeper in the CNN, they learn more complex patterns like textures, shapes, and patterns.
-- **Pooling layers**: Each MaxPooling layer reduces the spatial dimensions by taking the maximum value over a 2x2 window, reducing computational complexity while retaining important features.
-- **Dropout layers**: These layers randomly set a percentage of the neurons to zero during training, helping prevent overfitting.
+- **Pooling layers**: Each pooling layer reduces the spatial dimensions by taking the maximum value over a 2x2 window, reducing computational complexity while retaining important features.
+- **Dropout layers**: These layers randomly set a percentage of the neurons to zero during training, which helps prevent overfitting.
 - **Flatten layer**: This layer is just used to prepare the data for the fully connected (dense) layers by converting the multi-dimensional tensor into a 1D vector.
-- **Dense layers**: These layers are a more traditional neural network layers. They learn complex patterns and features from the extracted image features from the previous layers.
+- **Dense layers**: These layers are used in most traditional neural networks. They learn complex patterns and features from the extracted image features from the previous layers.
 
 #### Activation functions
-- **ReLU**: Applied to intermediate layers, it introduces non-linearity and allows the network to model complex patterns. It is used so that the neural network doesn't end up doing basic linear regression.
+- **ReLU**: Applied to intermediate layers, it introduces non-linearity and allows the network to model complex patterns. Without it, the neural network could become a basic linear regression model.
 - **Softmax**: Applied to the final output layer, it converts the raw scores into probabilities that sum to 1, providing the network's prediction for the most likely emotion.
 
 ### Training
