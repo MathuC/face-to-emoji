@@ -22,6 +22,7 @@ https://github.com/user-attachments/assets/81090d92-beca-4377-a38e-7568299dcb97
 `public/main.js` contains all of the frontend logic.
   - `run()` is the main async function where all of the other asynchronous operations are written in
     - `loop()` is is ran every 100 milliseconds. It detects the face in the frame of the video feed, crops the image, processes it and then sends it to the emotion detection AI model.
+
 `public/emotion_detection_model` contains the Keras CNN model that has been converted to TensorFlow.js format.
 
 ### Backend
