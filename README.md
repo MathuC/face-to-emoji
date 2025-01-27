@@ -74,85 +74,85 @@ The model often predicts happiness correctly with a 99% to 100% confidence score
 **Prerequisites:** Node.js, npm, MongoDB
 
 1. Clone the repository:
-```bash
-git clone https://github.com/MathuC/face-to-emoji.git
-```
+   ```bash
+   git clone https://github.com/MathuC/face-to-emoji.git
+   ```
 
 2. Start the MongoDB server.
 
 3. Access the MongoDB shell:
-  - Switch to the `emojiAppDB` Database:
-```mongo
-use emojiAppDB
-```
-  - Insert the correct Document into the `appStats` Collection:
-```mongo
-db.appstats.insertOne({
-  key: 'emojiCopyCount',
-  value: 0
-});
-```
+   1. Switch to the `emojiAppDB` Database:
+      ```mongo
+      use emojiAppDB
+      ```
+   2. Insert the correct Document into the `appStats` Collection:
+      ```mongo
+      db.appstats.insertOne({
+        key: 'emojiCopyCount',
+        value: 0
+      });
+      ```
 4. Install dependencies: 
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 ### Development Server
 5. Start the development server:
-```bash
-npm run dev
-```
+   ```bash
+   npm run dev
+   ```
 
 ### Production Server
 5. Start the production server:
-```bash
-npm start
-```
+   ```bash
+   npm start
+   ```
 
 ## Convolutional Neural Network
 *If you want to tweak the CNN's structure or train the model with a different dataset*
 
 **Prerequisites:** Python 3
 1. Navigate to the correct directory:
-```bash
-cd emotion_detection_cnn
-```
+   ```bash
+   cd emotion_detection_cnn
+   ```
 2. Create virtual environment:
-```bash
-python -m venv venv
-```
+   ```bash
+   python -m venv venv
+   ```
 3. Activate virtual environment:
- - macOS/Linux:
-```bash
-source venv/bin/activate
-```
- - Windows:
-```batch
-venv\Scripts\activate
-```
+   - macOS/Linux:
+     ```bash
+     source venv/bin/activate
+     ```
+   - Windows:
+     ```batch
+     venv\Scripts\activate
+     ```
 4. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 5. Make your changes to `python emotion_detection_cnn.py` (CNN's structure) and the `data` directory (dataset).
 
 6. Train the model:
-```bash
-python emotion_detection_cnn.py
-```
+   ```bash
+   python emotion_detection_cnn.py
+   ```
 7. Convert the Keras model into a TensoFlow.js model:
-```bash
-tensorflowjs_converter --input_format=keras emotion_detection_model.h5 emotion_detection_model
-```
+   ```bash
+   tensorflowjs_converter --input_format=keras emotion_detection_model.h5 emotion_detection_model
+   ```
 8. Delete the old model:
-```bash
-rm -r ../public/emotion_detection_model/
-```
+   ```bash
+   rm -r ../public/emotion_detection_model/
+   ```
 9. Move your new model to the correct directory:
-```bash
-mv emotion_detection_model/ ../public/
-```
+   ```bash
+   mv emotion_detection_model/ ../public/
+   ```
 
 # Contributing
 - To inform us about bugs or about enhancements you think the web app can benefit from, [submit a new issue](https://github.com/MathuC/face-to-emoji/issues/new) in the repository.
