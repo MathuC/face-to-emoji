@@ -6,7 +6,8 @@ find the perfect emoji for you.
 This web app does real-time facial emotion recognition using a convolutional neural network (CNN) and maps the output to the corresponding emojis. All of the image processing is done directly in your browser and in real-time, eliminating any privacy concerns.
 
 ## Demo
-*Turn on the sound*
+*Turn up the volume*
+
 https://github.com/user-attachments/assets/81090d92-beca-4377-a38e-7568299dcb97
 
 # Project Architecture
