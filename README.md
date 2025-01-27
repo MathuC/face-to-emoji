@@ -78,32 +78,33 @@ The model often predicts happiness correctly with a 99% to 100% confidence score
 git clone https://github.com/MathuC/face-to-emoji.git
 ```
 
-2. Start the MongoDB server and access the MongoDB shell.
+2. Start the MongoDB server.
 
-3. Switch to the Database:
+3. Access the MongoDB shell:
+  - Switch to the `emojiAppDB` Database:
 ```mongo
 use emojiAppDB
 ```
-4. Insert the correct Document into the Collection `appStats`:
+  - Insert the correct Document into the `appStats` Collection:
 ```mongo
 db.appstats.insertOne({
   key: 'emojiCopyCount',
   value: 0
 });
 ```
-5. Install dependencies: 
+4. Install dependencies: 
 ```bash
 npm install
 ```
 
 ### Development Server
-6. Start the development server:
+5. Start the development server:
 ```bash
 npm run dev
 ```
 
 ### Production Server
-6. Start the production server:
+5. Start the production server:
 ```bash
 npm start
 ```
@@ -133,19 +134,22 @@ venv\Scripts\activate
 ```bash
 pip install -r requirements.txt
 ```
-5. Train the model:
+
+5. Make your changes to `python emotion_detection_cnn.py` (CNN's structure) and the `data` directory (dataset).
+
+6. Train the model:
 ```bash
 python emotion_detection_cnn.py
 ```
-6. Convert the Keras model into a TensoFlow.js model:
+7. Convert the Keras model into a TensoFlow.js model:
 ```bash
 tensorflowjs_converter --input_format=keras emotion_detection_model.h5 emotion_detection_model
 ```
-7. Delete the old model:
+8. Delete the old model:
 ```bash
 rm -r ../public/emotion_detection_model/
 ```
-8. Move your new model to the correct directory:
+9. Move your new model to the correct directory:
 ```bash
 mv emotion_detection_model/ ../public/
 ```
