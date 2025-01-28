@@ -14,7 +14,7 @@ https://github.com/user-attachments/assets/81090d92-beca-4377-a38e-7568299dcb97
 
 ## Technologies Used
 - **Frontend:** HTML, CSS, Javascript. TensorFlow.js to load the convolutional neural network directly in the browser. Plotly.js for the live-updating bar chart.
-- **Backend:** Built with Node.js, Express, MongoDB, Socket.IO, TensorFlow. Deployed with DigitalOcean and Nginx. Integrated CI/CD with GitHub Actions.
+- **Backend:** Built with TypeScript, Node.js, Express, MongoDB, Socket.IO, TensorFlow. Deployed with DigitalOcean and Nginx. Integrated CI/CD with GitHub Actions.
 
 ## Important Components
 
