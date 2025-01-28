@@ -138,7 +138,7 @@ The model often predicts happiness correctly with a 99% to 100% confidence score
    pip install -r requirements.txt
    ```
 
-5. Make your changes to `python emotion_detection_cnn.py` (CNN's structure) and the `data` directory (dataset).
+5. Make your changes to `emotion_detection_cnn.py` (CNN's structure) and the `data` directory (dataset).
 
 6. Train the model:
    ```bash
