@@ -224,6 +224,11 @@ const run = async() => {
 
 run().catch((error) => {
     console.error("Error:", error);
+    if (error.name == "NotAllowedError") {
+        alert("Webcam access denied. Please allow access to your webcam and reload the page.");
+    } else if (error.name == "NotFoundError") {
+        alert("No webcam detected. Please make sure your webcam is connected and reload the page.");
+    }
 });
 
 function clearCanvas(canvas, ctx) {
